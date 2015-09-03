@@ -1,0 +1,5 @@
+set(ARDUINO_BOARD "arduino_zero")
+set(ARDUINO_MCU "cortex-m0plus")
+set(ARDUINO_FCPU "48000000L")
+set(ARDUINO_ROOT "$ENV{HOME}/.arduino15/packages/arduino/")
+include(${CMAKE_SOURCE_DIR}/scripts/libarduino_arm.cmake)
