@@ -75,7 +75,7 @@ macro(arduino_flash PROJECT_TRAGET_NAME)
   add_dependencies(${PROJECT_TRAGET_NAME}_upload ${PROJECT_TRAGET_NAME} core )
 
   add_custom_command(TARGET ${PROJECT_TRAGET_NAME}_upload POST_BUILD
-    COMMAND ${CMAKE_C_COMPILER} -Os -Wl,--gc-sections -save-temps -T${BOOTLOADER} --specs=nano.specs --specs=nosys.specs -mcpu=${ARDUINO_MCU} -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,-Map,${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.map -o ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.elf -lm ${LIBRARY_OUTPUT_PATH}/libcore.a -lm ${LIBRARY_OUTPUT_PATH}/lib${PROJECT_TRAGET_NAME}.a
+    COMMAND ${CMAKE_C_COMPILER} -Os -Wl,--gc-sections -save-temps -T${BOOTLOADER} --specs=nano.specs --specs=nosys.specs -mcpu=${ARDUINO_MCU} -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,-Map,${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.map -o ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.elf -lm ${LIBRARY_OUTPUT_PATH}/lib${PROJECT_TRAGET_NAME}.a -lm ${LIBRARY_OUTPUT_PATH}/libcore.a
     COMMAND ${OBJCOPY} -O binary ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.elf ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.bin
     COMMAND ${OPENOCD} -d2 -s ${ARDUINO_SCRIPTS} -f ${OPENOCD_CFG} -c "program ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.bin verify reset 0x00002000 exit"
     

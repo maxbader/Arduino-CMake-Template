@@ -1,5 +1,6 @@
 
 set(SOURCE_FILES
+    ${ARDUINO_CORE_DIR}/main.cpp
     demo_flash.cpp
     flash.cpp
 )
