@@ -15,6 +15,9 @@ Starting point for Arduino development using CMake
   * Useing the original IDE with verbose enabled helps you to tune the command parameters
   
 #Updates
+##2015-09-04 
+Markus Bader
+- Tested with Ardunio Zero
 ##2015-08-20 
 Markus Bader
 - Works with Arduino IDE 1.6.5
