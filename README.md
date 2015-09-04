@@ -18,7 +18,14 @@ Starting point for Arduino development using CMake
     - update the paths
   * for uno
     - sorry currently not working
-  
+3. CMake
+```
+mkdir build
+cd build
+cmake ..
+make demo_blink_upload
+```
+
 #Updates
 ##2015-09-04 
 Markus Bader
