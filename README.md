@@ -15,7 +15,7 @@ Starting point for Arduino development using CMake
     - include(${CMAKE_SOURCE_DIR}/scripts/arduino_uno.cmake
 2. Check the used included script
   * for m0/zero
-    - update the paths
+    - update the paths to your arduino arm enviroment
   * for uno
     - sorry currently not working
 3. CMake
@@ -23,7 +23,7 @@ Starting point for Arduino development using CMake
 mkdir build
 cd build
 cmake ..
-make demo_blink_upload
+make demo_blink_upload # to upload compile, link and upload a demo program
 ```
 
 #Updates
