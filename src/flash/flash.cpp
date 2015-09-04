@@ -1,4 +1,8 @@
-
+/**
+ * Flash led
+ * @author Markus Bader <markus.bader@tuwien.ac.at>
+ * @file flash.cpp
+ */
 #include <Arduino.h>
 
 void flash(int led){

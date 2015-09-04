@@ -14,4 +14,4 @@ set(OPENOCD "${ARDUINO_ROOT}/tools/openocd/0.9.0-arduino/bin/openocd")
 set(BOOTLOADER "${ARDUINO_ROOT}/hardware/samd/1.6.1/variants/arduino_zero/linker_scripts/gcc/flash_with_bootloader.ld")
 set(OBJCOPY "${ARDUINO_ROOT}/tools/arm-none-eabi-gcc/4.8.3-2014q1/bin/arm-none-eabi-objcopy")
 
-include(${CMAKE_SOURCE_DIR}/scripts/libarduino_arm.cmake)
+include(${CMAKE_SOURCE_DIR}/scripts/libarduino_zero.cmake)

@@ -22,10 +22,12 @@ set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} ${TUNNING_FLAGS} -Wall -Wstrict-prototypes
 set(ARDUINO_CORE_DIR "${ARDUINO_ROOT}/hardware/arduino/avr/cores/arduino/")
 set(ARDUINO_PINS_DIR "${ARDUINO_ROOT}/hardware/arduino/avr/variants/${ARDUINO_BOARD}")
 set(ARDUINO_PINS_DIR "${ARDUINO_ROOT}/hardware/arduino/avr/variants/${ARDUINO_BOARD}")
+set(ARDUINO_AVR_DIR "${ARDUINO_ROOT}/hardware/tools/avr/avr/include")
 set(AVRDUDE_CONFIG "${ARDUINO_ROOT}/hardware/tools/avr/etc/avrdude.conf")
 
 include_directories(${ARDUINO_PINS_DIR})
 include_directories(${ARDUINO_CORE_DIR})
+include_directories(${ARDUINO_AVR_DIR})
 
 set(ARDUINO_SOURCE_FILES
 	${ARDUINO_CORE_DIR}/wiring_pulse.S
@@ -52,32 +54,21 @@ set(ARDUINO_SOURCE_FILES
 	${ARDUINO_CORE_DIR}/CDC.cpp
 )
 
-set(PORT $ENV{ARDUINO_PORT})
-if (NOT PORT)
-    set(PORT ${ARDUINO_PORT})
-endif()
+add_library(core STATIC  ${ARDUINO_SOURCE_FILES})
 
-find_program(AVROBJCOPY "avr-objcopy")
-find_program(AVRDUDE "avrdude")
 
-# FIXME: Forcing target name to be "firmware"
-if(AVROBJCOPY AND AVRDUDE)
-    add_custom_target(hex)
-    add_dependencies(hex firmware)
+macro(arduino_flash PROJECT_TRAGET_NAME)
 
-    add_custom_command(TARGET hex POST_BUILD
+  add_executable(${PROJECT_TRAGET_NAME}_elf ${ARDUINO_CORE_DIR}/main.cpp)
+  target_link_libraries(${PROJECT_TRAGET_NAME}_elf core ${PROJECT_TRAGET_NAME})
+  
+  add_custom_target(${PROJECT_TRAGET_NAME}_upload)
+  add_dependencies(${PROJECT_TRAGET_NAME}_upload ${PROJECT_TRAGET_NAME}_elf )
+
+  add_custom_command(TARGET ${PROJECT_TRAGET_NAME}_upload POST_BUILD
         COMMAND ${AVROBJCOPY} -O ihex -R .eeprom ${CMAKE_CURRENT_BINARY_DIR}/firmware firmware.hex
-    )
+        COMMAND ${AVRDUDE} -C${AVRDUDE_CONFIG} -v -p${ARDUINO_MCU} -c${ARDUINO_PROTOCOL}  -P${PORT} -b${ARDUINO_UPLOAD_SPEED} -D -Uflash:w:firmware.hex:i 
+  )
 
-    add_custom_target(flash)
-    add_dependencies(flash hex)
-
-    add_custom_command(TARGET flash POST_BUILD
-        COMMAND ${AVRDUDE} -C${AVRDUDE_CONFIG} -v -p${ARDUINO_MCU} -c${ARDUINO_PROTOCOL}  -P${PORT} -b${ARDUINO_UPLOAD_SPEED} -D -Uflash:w:firmware.hex:i
-    )
-endif()
-
-add_custom_target(reset)
-add_custom_command(TARGET reset POST_BUILD
-    COMMAND echo 0 > ${PORT}
-)
+      
+endmacro()

@@ -1,10 +1,10 @@
 
 set(SOURCE_FILES
-    sketch.cpp
+    demo_flash.cpp
     flash.cpp
 )
 include_directories(./)
 
-add_library(sketch STATIC  ${SOURCE_FILES})
+add_library(demo_flash STATIC  ${SOURCE_FILES})
 
-flashZero(sketch)
+arduino_flash(demo_flash)
