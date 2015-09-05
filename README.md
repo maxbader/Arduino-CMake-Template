@@ -7,6 +7,16 @@ Starting point for Arduino development using CMake
 - http://www.tmpsantos.com.br/en/2010/12/arduino-uno-ubuntu-cmake/
 - http://forum.arduino.cc/index.php?topic=244741.0
 
+#Install
+- General
+- For Arduino UNO 
+- For Arduino M0/M0pro/Zerp
+```
+sudo apt-get remove binutils-arm-none-eabi gcc-arm-none-eabi
+sudo add-apt-repository ppa:terry.guo/gcc-arm-embedded
+sudo apt-get update
+sudo apt-get install gcc-arm-none-eabi=4.8.2-14ubuntu1+6
+```
 #Usage
 1. Check the project root CMakeList.txt 
   * Update the project name
