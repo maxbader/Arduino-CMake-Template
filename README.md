@@ -17,7 +17,7 @@ Starting point for Arduino development using CMake
      - avr-objcopy
      - avrdude
     * update the script/arduino_uno.cmake
-- For Arduino M0/M0pro/Zerp
+- For Arduino M0/M0pro/Zero
     * Check the verbose ouput and remember the path to
      - arm-none-eabi-gcc
      - arm-none-eabi-g++
@@ -25,7 +25,6 @@ Starting point for Arduino development using CMake
      - flash_with_bootloader.ld
      - arm-none-eabi-objcopy
     * update the script/arduino_m0plus.cmake
-- Define within the projects CMakeList.txt which config you like to use
 
 #Usage
 1. Check the project root CMakeList.txt 
