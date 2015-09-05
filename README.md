@@ -31,13 +31,13 @@ Starting point for Arduino development using CMake
     - include(${CMAKE_SOURCE_DIR}/scripts/arduino_m0plus.cmake or
     - include(${CMAKE_SOURCE_DIR}/scripts/arduino_uno.cmake
 2. Compile a demo
-```
-mkdir build
-cd build
-cmake ..
-make demo_blink.upload # to upload compile, link and upload
-make demo_flash.upload # to upload compile, link and upload
-```
+  ```
+  mkdir build
+  cd build
+  cmake ..
+  make demo_blink.upload # to upload compile, link and upload
+  make demo_flash.upload # to upload compile, link and upload
+  ```
 3. New cmake targets can be added by using the __arduino__ macro.
 
 #Updates
