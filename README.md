@@ -35,12 +35,13 @@ Starting point for Arduino development using CMake
 mkdir build
 cd build
 cmake ..
-make demo_blink.upload # to upload compile, link and upload a demo program
-make demo_flash.upload # to upload compile, link and upload a demo program
+make demo_blink.upload # to upload compile, link and upload
+make demo_flash.upload # to upload compile, link and upload
 ```
+3. New cmake targets can be added by using the __arduino__ macro.
 
 #Updates
-##2015-09-04 
+##2015-09-05 
 Markus Bader
 - Tested with Ardunio Zero
 - Macros added
