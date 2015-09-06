@@ -45,8 +45,8 @@ New cmake targets can be added by using the __arduino__ macro.
 ##2015-09-05 
 Markus Bader
 - Tested with Ardunio Zero
-- Macros added
-- 
+- arduino macros added
+
 ##2015-08-20 
 Markus Bader
 - Works with Arduino IDE 1.6.5
