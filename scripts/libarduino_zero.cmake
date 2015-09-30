@@ -7,23 +7,27 @@
 # http://forum.arduino.cc/index.php?topic=244741.0
 
 
-set(LIBRARY_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set(EXECUTABLE_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib/zero")
+set(LIBRARY_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib/zero")
 set(TUNNING_FLAGS "") 
+set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
+set(CMAKE_SYSTEM_NAME Generic)
 
-set(CMAKE_BOARD_FLAGS "-DF_CPU=${ARDUINO_FCPU} -DARDUINO=10605 -DARDUINO_SAMD_ZERO -DARDUINO_ARCH_SAMD -D__SAMD21G18A__ -DUSB_VID=0x2341 -DUSB_PID=0x804d -DUSBCON -DUSB_MANUFACTURER=\"Arduino LLC\" -DUSB_PRODUCT=\"\\\"Arduino Zero\\\"\"")
-set(CMAKE_CXX_FLAGS "-g -Os -w -std=gnu++11 -ffunction-sections -fdata-sections -fno-threadsafe-statics -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -MMD -mcpu=${ARDUINO_MCU} -mthumb ${CMAKE_BOARD_FLAGS}")
-set(CMAKE_C_FLAGS   "-g -Os -w -std=gnu11   -ffunction-sections -fdata-sections                         -nostdlib --param max-inline-insns-single=500                           -MMD -mcpu=${ARDUINO_MCU} -mthumb ${CMAKE_BOARD_FLAGS}")
-set(CMAKE_ASM_FLAGS "-g -x assembler-with-cpp                                                                                                                                                                     ${CMAKE_BOARD_FLAGS}")
+set(CMAKE_BOARD_FLAGS "-DF_CPU=${ARDUINO_FCPU} -DARDUINO_M0PLUS=10605 -DARDUINO_SAMD_ZERO -DARDUINO_ARCH_SAMD -D__SAMD21G18A__ -DUSB_VID=0x2341 -DUSB_PID=0x804d -DUSBCON -DUSB_MANUFACTURER=\"Arduino LLC\" -DUSB_PRODUCT=\"\\\"Arduino Zero\\\"\"")
+set(CMAKE_C_FLAGS   "-g -Os -w -std=gnu11   -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -MMD -mcpu=${ARDUINO_MCU} -mthumb ${CMAKE_BOARD_FLAGS}")
+set(CMAKE_CXX_FLAGS "-g -Os -w -std=gnu++11 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -MMD -mcpu=${ARDUINO_MCU} -mthumb ${CMAKE_BOARD_FLAGS}  -fno-threadsafe-statics  -fno-rtti -fno-exceptions")
+set(CMAKE_ASM_FLAGS "-g -x assembler-with-cpp                                                                                                                   ${CMAKE_BOARD_FLAGS}")
 
 
-set(AVRDUDE_CONFIG "${ARDUINO_ROOT}/hardware/tools/avr/etc/avrdude.conf")
+set(ARDUINO_AVRDUDE_CONFIG "${ARDUINO_ROOT}/hardware/tools/avr/etc/avrdude.conf")
 set(ARDUINO_CORE_DIR "${ARDUINO_ROOT}/hardware/samd/1.6.1/cores/arduino/")
 set(ARDUINO_CMSIS_DIR "${ARDUINO_ROOT}/tools/CMSIS/4.0.0-atmel/CMSIS/Include/")
 set(ARDUINO_DEVICE_DIR "${ARDUINO_ROOT}/tools/CMSIS/4.0.0-atmel/Device/ATMEL/")
 set(ARDUINO_SCRIPTS "${ARDUINO_ROOT}/tools/openocd/0.9.0-arduino/share/openocd/scripts/")
 set(ARDUINO_BOARD_DIR "${ARDUINO_ROOT}/hardware/samd/1.6.1/variants/${ARDUINO_BOARD}")
-set(OPENOCD_CFG "${ARDUINO_BOARD_DIR}/openocd_scripts/arduino_zero.cfg")
+set(ARDUINO_OPENOCD_CFG "${ARDUINO_BOARD_DIR}/openocd_scripts/arduino_zero.cfg")
 
+#include_directories("/usr/include/c++/4.8")
 include_directories(${ARDUINO_CMSIS_DIR})
 include_directories(${ARDUINO_DEVICE_DIR})
 include_directories(${ARDUINO_CORE_DIR})
@@ -66,20 +70,41 @@ set(ARDUINO_SOURCE_FILES
         ${ARDUINO_CORE_DIR}/main.cpp
 )
 
-add_library(core STATIC  ${ARDUINO_SOURCE_FILES})
+add_library(core_zero STATIC  ${ARDUINO_SOURCE_FILES})
                              
 
-macro(arduino_flash PROJECT_TRAGET_NAME)
+macro(arduino TRAGET_NAME TRAGET_SOURCE_FILES)
 
-  add_custom_target(${PROJECT_TRAGET_NAME}_upload)
-  add_dependencies(${PROJECT_TRAGET_NAME}_upload ${PROJECT_TRAGET_NAME} core )
-
-  add_custom_command(TARGET ${PROJECT_TRAGET_NAME}_upload POST_BUILD
-    COMMAND ${CMAKE_C_COMPILER} -Os -Wl,--gc-sections -save-temps -T${BOOTLOADER} --specs=nano.specs --specs=nosys.specs -mcpu=${ARDUINO_MCU} -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,-Map,${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.map -o ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.elf -lm ${LIBRARY_OUTPUT_PATH}/lib${PROJECT_TRAGET_NAME}.a -lm ${LIBRARY_OUTPUT_PATH}/libcore.a
-    COMMAND ${OBJCOPY} -O binary ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.cpp.elf ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.bin
-    COMMAND ${OPENOCD} -d2 -s ${ARDUINO_SCRIPTS} -f ${OPENOCD_CFG} -c "program ${LIBRARY_OUTPUT_PATH}/${PROJECT_TRAGET_NAME}.bin verify reset 0x00002000 exit"
+  # A hack to force the the gcc instead of the g++
+  # add_library(${TRAGET_NAME} STATIC ${ARDUINO_CORE_DIR}/main.cpp ${SOURCE_FILES})
+  #set(CMAKE_EXE_LINKER_FLAGS "-Os -Wl,--gc-sections -save-temps -T${BOOTLOADER} --specs=nano.specs --specs=nosys.specs -mcpu=${ARDUINO_MCU} -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,-Map,${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.map")
+  #SET(CMAKE_CXX_LINK_EXECUTABLE  "<CMAKE_C_COMPILER> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+  
+  # gernerates the elf file
+  #add_executable(${TRAGET_NAME}.elf  ${ARDUINO_CORE_DIR}/main.cpp)
+  #target_link_libraries(${TRAGET_NAME}.elf core ${TRAGET_NAME})
+   
     
-  )
+  add_library(${TRAGET_NAME} STATIC ${ARDUINO_CORE_DIR}/main.cpp ${SOURCE_FILES})
+  
+  add_custom_target(${TRAGET_NAME}.elf )
+  add_dependencies(${TRAGET_NAME}.elf core_zero ${TRAGET_NAME})
 
-      
+  add_custom_command(TARGET ${TRAGET_NAME}.elf POST_BUILD
+    COMMAND ${CMAKE_C_COMPILER} -Os -Wl,--gc-sections -save-temps -T${ARDUINO_BOOTLOADER} --specs=nano.specs --specs=nosys.specs -mcpu=${ARDUINO_MCU} -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,-Map,${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.map -o ${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.elf -lm ${LIBRARY_OUTPUT_PATH}/lib${TRAGET_NAME}.a -lm ${LIBRARY_OUTPUT_PATH}/libcore_zero.a
+  )
+  
+  # converts elf to bin
+  add_custom_target(${TRAGET_NAME}.bin)
+  add_dependencies(${TRAGET_NAME}.bin ${TRAGET_NAME}.elf )
+  add_custom_command(TARGET ${TRAGET_NAME}.bin POST_BUILD
+    COMMAND ${ARDUINO_OBJCOPY} -O binary ${EXECUTABLE_OUTPUT_PATH}/${TRAGET_NAME}.elf ${EXECUTABLE_OUTPUT_PATH}/${TRAGET_NAME}.bin
+  )
+  
+  # uploads the bin 
+  add_custom_target(${TRAGET_NAME}.upload)
+  add_dependencies(${TRAGET_NAME}.upload ${TRAGET_NAME} ${TRAGET_NAME}.bin )
+  add_custom_command(TARGET ${TRAGET_NAME}.upload POST_BUILD
+    COMMAND ${ARDUINO_OPENOCD} -d2 -s ${ARDUINO_SCRIPTS} -f ${ARDUINO_OPENOCD_CFG} -c "program ${EXECUTABLE_OUTPUT_PATH}/${TRAGET_NAME}.bin verify reset 0x4000 exit" 
+  )      
 endmacro()

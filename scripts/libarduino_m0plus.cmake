@@ -7,13 +7,13 @@
 # http://forum.arduino.cc/index.php?topic=244741.0
 
 
-set(EXECUTABLE_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib")
-set(LIBRARY_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set(EXECUTABLE_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib/m0plus")
+set(LIBRARY_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib/m0plus")
 set(TUNNING_FLAGS "") 
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 set(CMAKE_SYSTEM_NAME Generic)
 
-set(CMAKE_BOARD_FLAGS "-DF_CPU=${ARDUINO_FCPU} -DARDUINO_=10605 -DARDUINO_SAMD_ZERO -DARDUINO_ARCH_SAMD -D__SAMD21G18A__ -DUSB_VID=0x2a03 -DUSB_PID=0x804d -DUSBCON -DUSB_MANUFACTURER= -DUSB_PRODUCT=\"\\\"Arduino M0 Pro\\\"\"")
+set(CMAKE_BOARD_FLAGS "-DF_CPU=${ARDUINO_FCPU} -DARDUINO_=10707 -DARDUINO_SAMD_ZERO -DARDUINO_ARCH_SAMD -D__SAMD21G18A__ -DUSB_VID=0x2a03 -DUSB_PID=0x804f -DUSBCON -DUSB_MANUFACTURER= -DUSB_PRODUCT=\"\\\"Arduino M0 Pro\\\"\"")
 set(CMAKE_C_FLAGS   "-g -Os -w -std=gnu11   -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -MMD -mcpu=${ARDUINO_MCU} -mthumb ${CMAKE_BOARD_FLAGS}")
 set(CMAKE_CXX_FLAGS "-g -Os -w -std=gnu++11 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -MMD -mcpu=${ARDUINO_MCU} -mthumb ${CMAKE_BOARD_FLAGS}  -fno-threadsafe-statics  -fno-rtti -fno-exceptions")
 set(CMAKE_ASM_FLAGS "-g -x assembler-with-cpp                                                                                                                   ${CMAKE_BOARD_FLAGS}")
@@ -101,6 +101,6 @@ macro(arduino TRAGET_NAME TRAGET_SOURCE_FILES)
   add_custom_target(${TRAGET_NAME}.upload)
   add_dependencies(${TRAGET_NAME}.upload ${TRAGET_NAME} ${TRAGET_NAME}.bin )
   add_custom_command(TARGET ${TRAGET_NAME}.upload POST_BUILD
-    COMMAND ${ARDUINO_OPENOCD} -d2 -s ${ARDUINO_SCRIPTS} -f ${ARDUINO_OPENOCD_CFG} -c "program ${EXECUTABLE_OUTPUT_PATH}/${TRAGET_NAME}.bin verify reset 0x00002000 exit" 
+    COMMAND ${ARDUINO_OPENOCD} -d2 -s ${ARDUINO_SCRIPTS} -f ${ARDUINO_OPENOCD_CFG} -c "program ${EXECUTABLE_OUTPUT_PATH}/${TRAGET_NAME}.bin verify 0x4000 reset exit" 
   )      
 endmacro()

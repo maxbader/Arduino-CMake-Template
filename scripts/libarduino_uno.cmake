@@ -11,8 +11,8 @@ set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 enable_language(ASM)
 
-set(EXECUTABLE_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib")
-set(LIBRARY_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+set(EXECUTABLE_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib/uno")
+set(LIBRARY_OUTPUT_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/lib/uno")
 
 # C only fine tunning
 set(TUNNING_FLAGS "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums") 
