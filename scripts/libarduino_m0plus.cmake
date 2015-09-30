@@ -66,7 +66,7 @@ set(ARDUINO_SOURCE_FILES
         ${ARDUINO_CORE_DIR}/main.cpp
 )
 
-add_library(core_m0plus STATIC  ${ARDUINO_SOURCE_FILES})
+add_library(core STATIC  ${ARDUINO_SOURCE_FILES})
                              
 
 macro(arduino TRAGET_NAME TRAGET_SOURCE_FILES)
@@ -84,10 +84,10 @@ macro(arduino TRAGET_NAME TRAGET_SOURCE_FILES)
   add_library(${TRAGET_NAME} STATIC ${ARDUINO_CORE_DIR}/main.cpp ${SOURCE_FILES})
   
   add_custom_target(${TRAGET_NAME}.elf )
-  add_dependencies(${TRAGET_NAME}.elf core_m0plus ${TRAGET_NAME})
+  add_dependencies(${TRAGET_NAME}.elf core ${TRAGET_NAME})
 
   add_custom_command(TARGET ${TRAGET_NAME}.elf POST_BUILD
-    COMMAND ${CMAKE_C_COMPILER} -Os -Wl,--gc-sections -save-temps -T${ARDUINO_BOOTLOADER} --specs=nano.specs --specs=nosys.specs -mcpu=${ARDUINO_MCU} -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,-Map,${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.map -o ${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.elf -lm ${LIBRARY_OUTPUT_PATH}/lib${TRAGET_NAME}.a -lm ${LIBRARY_OUTPUT_PATH}/libcore_m0plus.a
+    COMMAND ${CMAKE_C_COMPILER} -Os -Wl,--gc-sections -save-temps -T${ARDUINO_BOOTLOADER} --specs=nano.specs --specs=nosys.specs -mcpu=${ARDUINO_MCU} -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,-Map,${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.map -o ${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.elf -lm ${LIBRARY_OUTPUT_PATH}/lib${TRAGET_NAME}.a -lm ${LIBRARY_OUTPUT_PATH}/libcore.a
   )
   
   # converts elf to bin

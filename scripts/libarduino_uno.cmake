@@ -55,7 +55,7 @@ set(ARDUINO_UNO_SOURCE_FILES
 	${ARDUINO_UNO_CORE_DIR}/CDC.cpp
 )
 
-add_library(core_uno STATIC  ${ARDUINO_UNO_SOURCE_FILES})
+add_library(core STATIC  ${ARDUINO_UNO_SOURCE_FILES})
 
 set(PORT $ENV{ARDUINO_UNO_PORT})
 if (NOT PORT)
@@ -79,10 +79,10 @@ macro(arduino TRAGET_NAME TRAGET_SOURCE_FILES)
   add_library(${TRAGET_NAME} STATIC ${ARDUINO_UNO_CORE_DIR}/main.cpp ${SOURCE_FILES})
   
   add_custom_target(${TRAGET_NAME}.elf )
-  add_dependencies(${TRAGET_NAME}.elf core_uno ${TRAGET_NAME})
+  add_dependencies(${TRAGET_NAME}.elf core ${TRAGET_NAME})
 
   add_custom_command(TARGET ${TRAGET_NAME}.elf POST_BUILD
-    COMMAND ${CMAKE_C_COMPILER}  -w -Os -Wl,--gc-sections -mmcu=atmega328p -o ${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.elf -lm ${LIBRARY_OUTPUT_PATH}/lib${TRAGET_NAME}.a -lm ${LIBRARY_OUTPUT_PATH}/libcore_uno.a
+    COMMAND ${CMAKE_C_COMPILER}  -w -Os -Wl,--gc-sections -mmcu=atmega328p -o ${LIBRARY_OUTPUT_PATH}/${TRAGET_NAME}.elf -lm ${LIBRARY_OUTPUT_PATH}/lib${TRAGET_NAME}.a -lm ${LIBRARY_OUTPUT_PATH}/libcore.a
   )
   
 
