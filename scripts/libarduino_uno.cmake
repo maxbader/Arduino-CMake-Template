@@ -62,7 +62,7 @@ if (NOT PORT)
     set(PORT ${ARDUINO_UNO_PORT})
 endif()
 
-add_custom_target(reset_uno)
+add_custom_target(reset)
 add_custom_command(TARGET reset POST_BUILD
     COMMAND echo 0 > ${PORT}
 )
