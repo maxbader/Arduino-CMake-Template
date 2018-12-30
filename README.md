@@ -7,7 +7,7 @@ Starting point for Arduino development using CMake
 - http://www.tmpsantos.com.br/en/2010/12/arduino-uno-ubuntu-cmake/
 - http://forum.arduino.cc/index.php?topic=244741.0
 
-#Install
+# Install
 - Install at least the Arduino IDE 1.6.5
   * File > Preferences > Show verbose output --> activate compilation and upload
 - For Arduino UNO 
@@ -26,7 +26,7 @@ Starting point for Arduino development using CMake
      - arm-none-eabi-objcopy
     * update the script/arduino_m0plus.cmake
 
-#Usage
+# Usage
 1. Check the project root CMakeList.txt 
     - include(${CMAKE_SOURCE_DIR}/scripts/arduino_m0plus.cmake or
     - include(${CMAKE_SOURCE_DIR}/scripts/arduino_uno.cmake
@@ -40,14 +40,14 @@ make demo_flash.upload # to upload compile, link and upload
 ```
 New cmake targets can be added by using the __arduino__ macro.
 
-#Updates
+# Updates
 
-##2015-09-05 
+## 2015-09-05 
 Markus Bader
 - Tested with Ardunio Zero
 - arduino macros added
 
-##2015-08-20 
+## 2015-08-20 
 Markus Bader
 - Works with Arduino IDE 1.6.5
 - Tested with Ardunio UNO
